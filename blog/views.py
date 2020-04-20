@@ -73,8 +73,8 @@ class BloggerListView(generic.ListView):
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
-from django.urls import reverse
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse, reverse_lazy
 
 
 class BlogCommentCreate(LoginRequiredMixin, CreateView):
@@ -110,3 +110,24 @@ class BlogCommentCreate(LoginRequiredMixin, CreateView):
         After posting comment return to associated blog.
         """
         return reverse('blog-detail', kwargs={'pk': self.kwargs['pk'], })
+
+
+class BlogCreate(LoginRequiredMixin, CreateView):
+    model = Blog
+    fields = ['name', 'description']
+    template_name = 'blog/blog_edit.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.blogauthor
+        return super().form_valid(form)
+
+
+class BlogUpdate(UpdateView):
+    model = Blog
+    fields = ['name', 'description']
+    template_name = 'blog/blog_edit.html'
+
+
+class BlogDelete(DeleteView):
+    model = Blog
+    success_url = reverse_lazy('blog-list')

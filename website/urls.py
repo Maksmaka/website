@@ -24,7 +24,7 @@ urlpatterns = [
 from django.urls import include
 
 urlpatterns += [
-    path('blog/', include('blog.urls')),
+    path('', include('blog.urls')),
 ]
 
 # Add URL maps to redirect the base URL to our application
@@ -37,6 +37,10 @@ urlpatterns += [
 # Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
+]
+
+urlpatterns += [
+    path('api/', include('blogapi.urls')),
 ]
 
 # Use static() to add url mapping to serve static files during development (only)
