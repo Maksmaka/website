@@ -1,20 +1,27 @@
-from rest_framework.generics import get_object_or_404
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
-from blog.models import Blog, BlogAuthor
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets
+from rest_framework.response import Response
+
+from blog.models import Blog
 from .serializers import BlogSerializer
 
 
-class ArticleView(ListModelMixin, CreateModelMixin, GenericAPIView):
-    queryset = Blog.objects.all()
+# class BlogView(viewsets.ViewSet):
+#     """
+#     A simple ViewSet that for listing or retrieving users.
+#     """
+#     def list(self, request):
+#         queryset = Blog.objects.all()
+#         serializer = BlogSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#
+#     def retrieve(self, request, pk=None):
+#         queryset = Blog.objects.all()
+#         user = get_object_or_404(queryset, pk=pk)
+#         serializer = BlogSerializer(user)
+#         return Response(serializer.data)
+
+
+class BlogViewSet(viewsets.ModelViewSet):
     serializer_class = BlogSerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        author = get_object_or_404(BlogAuthor, id=self.request.data.get('author_id'))
-        return serializer.save(author=author)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    queryset = Blog.objects.all()
