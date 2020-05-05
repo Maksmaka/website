@@ -3,6 +3,9 @@
 {% block content %}
 
 <h1>{{ blog.name }}</h1>
+{% if user.is_authenticated %}
+ <a href="{% url 'blog_edit' pk=blog.pk %}">Edit</a>
+{% endif %}
 <p><strong>Post date</strong> {{ blog.post_date }}</p>
 <p><strong>Author:</strong> <a href="{% url 'blogs-by-author' blog.author.pk %}">{{ blog.author }}</a></p>
 <p><strong>Description:</strong></p>

@@ -1,11 +1,10 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse, reverse_lazy
+
 from .models import Blog, BlogAuthor, BlogComment
-from django.contrib.auth.models import User  # Blog author or commenter
 
 
 def index(request):
@@ -25,9 +24,6 @@ class BlogListView(generic.ListView):
     """
     model = Blog
     paginate_by = 5
-
-
-from django.shortcuts import get_object_or_404
 
 
 class BlogListbyAuthorView(generic.ListView):
@@ -72,11 +68,6 @@ class BloggerListView(generic.ListView):
     paginate_by = 5
 
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
-from django.urls import reverse
-
-
 class BlogCommentCreate(LoginRequiredMixin, CreateView):
     """
     Form for adding a blog comment. Requires login.
@@ -110,3 +101,28 @@ class BlogCommentCreate(LoginRequiredMixin, CreateView):
         After posting comment return to associated blog.
         """
         return reverse('blog-detail', kwargs={'pk': self.kwargs['pk'], })
+
+
+class BlogCreate(LoginRequiredMixin, CreateView):
+    model = Blog
+    fields = ['name', 'description']
+    template_name = 'blog/blog_edit.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.blogauthor
+        return super().form_valid(form)
+
+
+class BlogUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Blog
+    fields = ['name', 'description']
+    template_name = 'blog/blog_edit.html'
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user.blogauthor
+
+
+class BlogDelete(DeleteView):
+    model = Blog
+    success_url = reverse_lazy('blog-list')

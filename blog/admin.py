@@ -2,11 +2,6 @@ from django.contrib import admin
 
 # Register your models here.
 
-
-from django.contrib import admin
-
-# Register your models here.
-
 from .models import BlogAuthor, Blog, BlogComment
 
 
@@ -20,7 +15,8 @@ class BlogCommentsInline(admin.TabularInline):
     Used to show 'existing' blog comments inline below associated blogs
     """
     model = BlogComment
-    max_num=0
+    max_num = 0
+
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):

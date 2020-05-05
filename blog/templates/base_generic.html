@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  {% load static %}
 <html lang="en">
 <head>
 
@@ -10,7 +10,6 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <!-- Add additional CSS in static file -->
-  {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -29,6 +28,7 @@
   <ul class="sidebar-nav">
    {% if user.is_authenticated %}
      <li>User: {{ user.get_username }}</li>
+      <li><a href="{% url 'blog_new' %}">New post:</a></li>
      <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
    {% else %}
      <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
