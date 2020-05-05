@@ -1,2 +1,5 @@
 venv
 .idea
+blog/__pycache__/
+blogapi/__pycache__/
+website/__pycache__/
